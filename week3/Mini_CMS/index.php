@@ -8,12 +8,31 @@
 	include_once("classes/Story.class.php");
 	
 	$story = new Story();
-	$stories = $story->ShowStories();
+	$stories = $story->getStories();
+	$storyList = array(); 
 
-	//var_dump($story->stories);
-	//echo var_dump($story);
+	//var_dump($story->getStories());
 
+	if ($numb_stories = $stories)
+	{
+		while($row = $numb_stories->fetch_array(MYSQLI_ASSOC))
+		{
+			$story_item = array();
+			$story_item["id"] = htmlspecialchars($row["story_id"]);
+			$story_item["title"] = htmlspecialchars($row["story_title"]);
+			$story_item["body"] = htmlspecialchars($row["story_post"]);
+			$story_item["dayNumb"] = htmlspecialchars($row["story_dayNumb"]);
+			$story_item["dayWord"] = htmlspecialchars($row["story_dayWord"]);
+			$story_item["month"] = htmlspecialchars($row["story_month"]);
 
+			array_push($storyList,$story_item);
+		}
+	}
+
+	usort($storyList, function($a, $b) 
+	{
+	   	return $b['id'] - $a['id'];
+	});
 
  ?><!doctype html>
 <html lang="en">
@@ -41,7 +60,7 @@
 			<ul>
 			<?php
 			if(isset($stories) && !empty($stories)){
-				foreach ($stories as $key => $story) { ?>
+				foreach ($storyList as $key => $story) { ?>
 				<li class="storySec">	
 					<div class="titleSec">
 			 			<a href='story.php?id= <?php echo $key;?>'><?php echo $story['title'];?> </a>

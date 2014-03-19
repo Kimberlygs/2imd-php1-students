@@ -104,35 +104,15 @@
 			mysqli_close($db->conn);
 		}
 
-		public function ShowStories()
+		public function getStories()
 		{ 
-			$stories = array(); 
-
 			$db = new Db();
 
 			$sql = "select * from post";
-			if ($numb_stories = $db->conn->query($sql))
-			{
-				
-				while($row = $numb_stories->fetch_array(MYSQLI_ASSOC))
-				{
-					$story_item = array();
-					$story_item["id"] = htmlspecialchars($row["story_id"]);
-					$story_item["title"] = htmlspecialchars($row["story_title"]);
-					$story_item["body"] = htmlspecialchars($row["story_post"]);
-					$story_item["dayNumb"] = htmlspecialchars($row["story_dayNumb"]);
-					$story_item["dayWord"] = htmlspecialchars($row["story_dayWord"]);
-					$story_item["month"] = htmlspecialchars($row["story_month"]);
+			
+			$result = $db->conn->query($sql);
 
-					array_push($stories,$story_item);
-				}
-			}
-			usort($stories, function($a, $b) 
-			{
-		    	return $b['id'] - $a['id'];
-			});
-
-			return $stories;
+			return $result;
 		}
 	}
  ?>
